@@ -2,47 +2,93 @@
     <div class="reactive-form">
         <h1>Reactive Form</h1>
         <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-            <div class="firstname">
-                <label for="">First Name</label><br>
-                <input type="text" formControlName="firstname" required><br>
-                <span *ngIf="myForm.controls.firstname.errors?.required">Required Field *</span>
+            <div class="parts">
+                <div class="firstname">
+                    <label for="">First Name</label><br>
+                    <input type="text" formControlName="firstname" required><br>
+                    <span *ngIf="myForm.controls.firstname.errors?.required">Required Field *</span>
+                </div>
+                <div class="lastname">
+                    <label for="">Last Name</label><br>
+                    <input type="text" formControlName="lastname" required><br>
+                    <span *ngIf="myForm.controls.lastname.errors?.required">Required Field *</span>
+                </div>
             </div>
-            <div class="lastname">
-                <label for="">Last Name</label><br>
-                <input type="text" formControlName="lastname" required><br>
-                <span *ngIf="myForm.controls.lastname.errors?.required">Required Field *</span>
+            <div class="parts">
+                <div class="email">
+                    <label for="">Email</label><br>
+                    <input type="email" formControlName="email" required><br>
+                    <span *ngIf="myForm.controls.email.errors?.required">Required Field *</span>
+                    <span *ngIf="myForm.controls.email.errors?.email">Must Be In Email Format *</span>
+                </div>
+                <div class="phonenumber">
+                    <label for="">Phone Number</label><br>
+                    <input type="text" formControlName="phoneNumber" required><br>
+                    <span *ngIf="myForm.controls.phoneNumber.errors?.required">Required Field *</span>
+                    <span *ngIf="myForm.controls.phoneNumber.errors?.minlength">Phone Number Length Must Be In Between 9 and 10</span>
+                </div>
             </div>
-            <div class="email">
-                <label for="">Email</label><br>
-                <input type="email" formControlName="email" required><br>
-                <span *ngIf="myForm.controls.email.errors?.required">Required Field *</span>
-                <span *ngIf="myForm.controls.email.errors?.email">Must Be In Email Format *</span>
-            </div>
-            <div class="phonenumber">
-                <label for="">Phone Number</label><br>
-                <input type="text" formControlName="phoneNumber" required><br>
-                <span *ngIf="myForm.controls.phoneNumber.errors?.required">Required Field *</span>
-                <span *ngIf="myForm.controls.phoneNumber.errors?.minlength">Phone Number Length Must Be In Between 9 and 10</span>
+            <div class="parts">
+                <div class="dob">
+                    <label for="">Date Of Birth</label><br>
+                    <input type="date" formControlName="dob" required><br>
+                    <span *ngIf="myForm.controls.dob.errors?.required">Required Field *</span>
+                </div>
+                <div class="password">
+                    <label for="">Password</label><br>
+                    <input type="password" formControlName="password" required><br>
+                    <span *ngIf="myForm.controls.password.errors?.required">
+                        Required Field *
+                    </span>
+                    <ul *ngIf="myForm.controls.password.errors">
+                        <!-- <li *ngIf="myForm.controls.password.errors?.required">
+                            Required Field *
+                        </li> -->
+                        <li *ngIf="myForm.controls.password.touched && myForm.controls.password.errors?.minlength?.requiredLength == 8">
+                            Password must be at least 8 characters
+                        </li>
+                        <li *ngIf="myForm.controls.password.errors?.hasSpecialCharacters">
+                            Password must have at least 1 SpecialCharacters
+                        </li>
+                        <li *ngIf="myForm.controls.password.errors?.hasCapitalCase">
+                            Password must have at least 1 CapitalCase
+                        </li>
+                        <li *ngIf="myForm.controls.password.errors?.hasNumber">
+                            Password must have at least 1 Number
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="address" formGroupName="address">
                 <label for="">Address</label><br>
                 <div class="address-fields">
-                    <div class="country">
-                        <label for="">Country</label><br>
-                        <select name="Country" id="" formControlName="country" (change)="selectCountry($event)" required>
-                            <option disabled>Select Country</option>
-                            <option value="{{country}}">India</option>
-                        </select><br>
-                        <span *ngIf="myForm.controls.address.get('country')?.errors?.required">Required Field *</span>
-                    </div>
-                    <div class="state" *ngIf="!isUpdate">
-                        <label for="">State</label><br>
-                        <select name="State" id="" formControlName="state" (change)="filterState($event)" required>
+                    <div class="parts">
+                        <div class="country">
+                            <label for="">Country</label><br>
+                            <select name="Country" id="" formControlName="country" (change)="selectCountry($event)" required>
+                                <option disabled>Select Country</option>
+                                <option value="{{country}}">India</option>
+                            </select><br>
+                            <span *ngIf="myForm.controls.address.get('country')?.errors?.required">Required Field *</span>
+                        </div>
+                        <div class="state" *ngIf="!isUpdate">
+                            <label for="">State</label><br>
+                            <select name="State" id="" formControlName="state" (change)="filterState($event)" required>
+                                <option disabled>Select State</option>
+                                <option [value]="item.state" *ngFor="let item of filterStateArray">{{item.state}}</option>
+                            </select><br>
+                            <span *ngIf="myForm.controls.address.get('state')?.errors?.required">Required Field *</span><br>
+                            <span *ngIf="myForm.controls.address.get('state')?.errors?.required">Select Country First</span>
+                        </div>
+                        <!-- Update -->
+                        <div class="state" *ngIf="isUpdate">
+                            <label for="">State</label><br>
+                            <select name="State" id="" formControlName="state" (change)="filterState($event)" required>
                             <option disabled>Select State</option>
-                            <option [value]="item.state" *ngFor="let item of filterStateArray">{{item.state}}</option>
+                            <option value="{{item['state']}}" *ngFor="let item of filterStateArray">{{item.state}}</option>
                         </select><br>
-
-                        <span *ngIf="myForm.controls.address.get('state')?.errors?.required">Required Field *</span>
+                            <!-- <span *ngIf="myForm.controls.address.get('country')?.errors?.required">Required Field *</span> -->
+                        </div>
                     </div>
                     <div class="city" *ngIf="!isUpdate">
                         <label for="">City</label><br>
@@ -50,19 +96,11 @@
                             <option disabled>Select City</option>
                             <option [value]="item.city" *ngFor="let item of filterCityArray">{{item.city}}</option>
                         </select><br>
-                        <span *ngIf="myForm.controls.address.get('city')?.errors?.required">Required Field *</span>
+                        <span *ngIf="myForm.controls.address.get('city')?.errors?.required">Required Field *</span><br>
+                        <span *ngIf="myForm.controls.address.get('city')?.errors?.required">Select State First</span>
                     </div>
 
-                    <!-- Update -->
-                    <div class="state" *ngIf="isUpdate">
-                        <label for="">State</label><br>
-                        <select name="State" id="" formControlName="state" (change)="filterState($event)" required>
-                            <option disabled>Select State</option>
-                            <option value="{{item['state']}}" *ngFor="let item of filterStateArray">{{item.state}}</option>
-                        </select><br>
 
-                        <!-- <span *ngIf="myForm.controls.address.get('country')?.errors?.required">Required Field *</span> -->
-                    </div>
                     <div class="city" *ngIf="isUpdate">
                         <label for="">City</label><br>
                         <select name="City" id="" formControlName="city" required>
@@ -73,33 +111,6 @@
                     </div>
                 </div>
             </div>
-            <div class="dob">
-                <label for="">Date Of Birth</label><br>
-                <input type="date" formControlName="dob" required><br>
-                <span *ngIf="myForm.controls.dob.errors?.required">Required Field *</span>
-            </div>
-            <div class="password">
-                <label for="">Password</label><br>
-                <input type="password" formControlName="password" required><br>
-                <span *ngIf="myForm.controls.password.errors?.required">
-                    Required Field *
-                </span>
-                <ul *ngIf="myForm.controls.password.errors">
-                    <th *ngIf="myForm.controls.password.touched && myForm.controls.password.errors?.minlength?.requiredLength == 8">
-                        Password must be at least 8 characters
-                    </th>
-                    <th *ngIf="myForm.controls.password.errors?.hasSpecialCharacters">
-                        Password must have at least 1 SpecialCharacters
-                    </th>
-                    <th *ngIf="myForm.controls.password.errors?.hasCapitalCase">
-                        Password must have at least 1 CapitalCase
-                    </th>
-                    <th *ngIf="myForm.controls.password.errors?.hasNumber">
-                        Password must have at least 1 Number
-                    </th>
-                </ul>
-            </div>
-
             <button *ngIf="!isUpdate" type="submit">Create</button>
             <button *ngIf="isUpdate" type="button" (click)="update()">Update</button>
         </form>
